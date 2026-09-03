@@ -76,6 +76,8 @@ jobs:
           MAIL_MAILER=array
           VITE_APP_NAME=Laravel
           ENV
+          mkdir -p storage/framework/cache storage/framework/views bootstrap/cache
+          chmod -R 777 storage bootstrap/cache
           php artisan key:generate
           php artisan config:clear
 
