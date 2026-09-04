@@ -8,6 +8,7 @@ use App\Http\Resources\InquiryResource;
 use App\Models\Inquiry;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class InquiryController extends Controller
@@ -29,6 +30,7 @@ class InquiryController extends Controller
         $inquiry = Inquiry::create([
             'property_id' => $property->id,
             'client_id' => Auth::id(),
+            'broker_id' => $property->broker_id,
             'message' => $request->string('message'),
             'status' => 'pending',
         ]);
@@ -51,12 +53,16 @@ class InquiryController extends Controller
         ]);
     }
 
-    public function updateStatus(Inquiry $inquiry): JsonResponse
+    public function updateStatus(Request $request, Inquiry $inquiry): JsonResponse
     {
         abort_unless(Auth::user()?->isBroker() && $inquiry->property->broker_id === Auth::id(), 403);
 
+        $validated = $request->validate([
+            'status' => ['required', 'string', 'in:pending,contacted,closed'],
+        ]);
+
         $inquiry->update([
-            'status' => request('status', 'pending'),
+            'status' => $validated['status'],
         ]);
 
         return response()->json([
