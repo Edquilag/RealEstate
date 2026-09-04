@@ -37,7 +37,8 @@ RUN sed -i 's!<Directory /var/www/>!<Directory /var/www/html/public>!' \
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-RUN chown -R www-data:www-data storage bootstrap/cache \
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
