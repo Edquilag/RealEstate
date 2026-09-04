@@ -11,9 +11,13 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    gnupg \
+    ca-certificates \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql gd zip \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
 COPY . /var/www/html
 
