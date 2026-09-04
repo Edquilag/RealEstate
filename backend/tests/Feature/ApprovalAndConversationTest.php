@@ -24,6 +24,11 @@ it('creates a pending broker registration with compliance details', function () 
         'status' => 'pending',
         'company_name' => 'Test Realty Co.',
     ]);
+    $this->assertDatabaseHas('broker_profiles', [
+        'company_name' => 'Test Realty Co.',
+        'prc_license_number' => 'PRC-123456',
+        'status' => 'pending',
+    ]);
 });
 
 it('shows pending approvals to the admin and allows approval', function () {

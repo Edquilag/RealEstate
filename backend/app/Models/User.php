@@ -94,6 +94,16 @@ class User extends Authenticatable
         return $this->status === 'approved';
     }
 
+    public function brokerProfile()
+    {
+        return $this->hasOne(BrokerProfile::class);
+    }
+
+    public function verificationLogs()
+    {
+        return $this->hasMany(BrokerVerificationLog::class, 'actor_id');
+    }
+
     public function conversationsAsClient()
     {
         return $this->hasMany(Conversation::class, 'client_id');

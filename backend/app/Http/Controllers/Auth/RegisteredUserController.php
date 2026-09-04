@@ -63,6 +63,18 @@ class RegisteredUserController extends Controller
             'tin' => $request->input('tin'),
         ]);
 
+        if ($role === 'broker') {
+            $user->brokerProfile()->create([
+                'company_name' => $request->input('company_name'),
+                'office_address' => $request->input('office_address'),
+                'prc_license_number' => $request->input('prc_license_number'),
+                'prc_license_expiry' => $request->input('prc_license_expiry'),
+                'tin' => $request->input('tin'),
+                'status' => 'pending',
+                'submitted_at' => now(),
+            ]);
+        }
+
         event(new Registered($user));
 
         Auth::login($user);

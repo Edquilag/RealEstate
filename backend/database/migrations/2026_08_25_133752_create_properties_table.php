@@ -25,15 +25,20 @@ return new class extends Migration
     $table->string('listing_type');
 
     $table->string('location');
+    $table->index('location');
 
     $table->decimal('price', 12, 2);
+    $table->index('price');
 
     $table->decimal('floor_area', 10, 2);
 
-    $table->string('status')
-          ->default('available');
+    $table->string('status')->default('available');
+    $table->index('status');
 
     $table->timestamps();
+    $table->index(['broker_id', 'status']);
+    $table->index(['listing_type', 'status']);
+    $table->index(['property_type', 'status']);
 });
     }
 

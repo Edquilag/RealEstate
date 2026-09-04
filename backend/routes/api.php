@@ -9,12 +9,6 @@ Route::get('/health', function () {
     return ['status' => 'ok'];
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-});
-
 Route::prefix('v1')->group(function () {
     Route::middleware('throttle:60,1')->group(function () {
         Route::get('/properties', [PropertyController::class, 'index']);
@@ -29,5 +23,11 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'role:broker', 'throttle:30,1'])->group(function () {
         Route::get('/broker/inquiries', [InquiryController::class, 'brokerIndex']);
         Route::patch('/broker/inquiries/{inquiry}', [InquiryController::class, 'updateStatus']);
+    });
+});
+
+Route::middleware(['auth:sanctum', 'throttle:20,1'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
     });
 });

@@ -25,10 +25,12 @@ return new class extends Migration
 
     $table->text('message');
 
-    $table->string('status')
-        ->default('pending');
+    $table->string('status')->default('pending');
+    $table->index('status');
 
     $table->timestamps();
+    $table->index(['property_id', 'status']);
+    $table->index(['client_id', 'status']);
 
 });
     }

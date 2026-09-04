@@ -29,6 +29,21 @@ class UserApprovalController extends Controller
             'approval_notes' => 'Approved by admin.',
         ]);
 
+        if ($user->role === 'broker' && $user->brokerProfile) {
+            $user->brokerProfile->update([
+                'status' => 'approved',
+                'approved_at' => now(),
+                'rejected_at' => null,
+                'verification_notes' => 'Approved by admin.',
+            ]);
+
+            $user->brokerProfile->verificationLogs()->create([
+                'actor_id' => auth()->id(),
+                'action' => 'approved',
+                'notes' => 'Approved by admin.',
+            ]);
+        }
+
         return redirect()->route('admin.approvals.index')->with('success', 'User approved.');
     }
 
@@ -43,6 +58,20 @@ class UserApprovalController extends Controller
             'rejected_at' => now(),
             'approval_notes' => $request->input('notes', 'Rejected by admin.'),
         ]);
+
+        if ($user->role === 'broker' && $user->brokerProfile) {
+            $user->brokerProfile->update([
+                'status' => 'rejected',
+                'rejected_at' => now(),
+                'verification_notes' => $request->input('notes', 'Rejected by admin.'),
+            ]);
+
+            $user->brokerProfile->verificationLogs()->create([
+                'actor_id' => auth()->id(),
+                'action' => 'rejected',
+                'notes' => $request->input('notes', 'Rejected by admin.'),
+            ]);
+        }
 
         return redirect()->route('admin.approvals.index')->with('success', 'User rejected.');
     }
